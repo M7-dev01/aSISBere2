@@ -238,4 +238,4 @@ int main(){
 
     return 0;
 }
-//fazer loop pagamento ainda linha 171
+//fazer loop pagamento, abertura e fechamento de caixa ainda 

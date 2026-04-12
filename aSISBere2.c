@@ -1,15 +1,15 @@
-#include <stdio.h>
+#include <stdio.h> //Biblioteca
 
-float processarvenda(int *, float);
-float pagamento(float);
+float processarvenda(int *, float); //prototipo da função processar venda
+float pagamento(float); //prototipo da função pagamento
 
 int main(){
-
+    //Variaveis
     int opmenu, codigo, estoque[40], quantidade, caixa_aberto = 0;
     float preco[40], valorlimpeza = 0, valoralimento = 0, valorpadaria = 0, valorcompra = 0, valor_caixaberto = 0;
     float faturamento = 0, valorpago;
 
-    /*Estoque e preço dos produtos de limpeza*/
+    /*Definindo estoque e preço dos produtos de limpeza*/
     estoque[11] = 50;     preco[11] = 1.99;
     estoque[12] = 30;     preco[12] = 8.99;
     estoque[13] = 0;      preco[13] = 1.50;
@@ -18,7 +18,7 @@ int main(){
     estoque[16] = 15;     preco[16] = 7.99;
     estoque[17] = 60;     preco[17] = 1.00;
 
-    /*Estoque e preço dos alimentos*/
+    /*Definindo estoque e preço dos alimentos*/
     estoque[21] = 10;     preco[21] = 19.99;
     estoque[22] = 15;     preco[22] = 5.90;
     estoque[23] = 10;     preco[23] = 4.50;
@@ -27,7 +27,7 @@ int main(){
     estoque[26] = 6;      preco[26] = 2.00;
     estoque[27] = 15;     preco[27] = 5.00;
 
-    /*Estoque e preço dos produtos da padaria*/
+    /*Definindo preço dos produtos da padaria*/
     preco[31] = 9.50;
     preco[32] = 12.50;
     preco[33] = 1.90;
@@ -36,9 +36,10 @@ int main(){
     preco[36] = 2.50;
     preco[37] = 17.50;
 
-
+    //Loop principal
     do
     {
+        //Menu principal
         printf("\n======== Menu Principal ========\n");
         printf("    1 - Material de Limpeza     \n");
         printf("    2 - Venda de Alimento       \n");
@@ -48,16 +49,18 @@ int main(){
         printf("    6 - Fechamento de caixa     \n");
         printf("    7 - Sair                    \n");
         printf("================================\n");
-        scanf("%d", &opmenu);
+        scanf("%d", &opmenu);//Le opção digitada
 
         switch (opmenu)
         {
         case 1:
+            //Verifica se o caixa está aberto
             if(caixa_aberto != 1){
                 printf("Abra o caixa primeiro!");
                 break;
             }
 
+            //Exibe menu de limpeza
             printf("=============== Menu Material de Limpeza ===============\n");
             printf("           11 - Detergente            R$%.2f (%d)        \n", preco[11], estoque[11]);
             printf("           12 - Sabão em Pó(1kg)      R$%.2f (%d)        \n", preco[12], estoque[12]);
@@ -69,7 +72,9 @@ int main(){
             printf("=========================================================\n");
             scanf("%d", &codigo);
 
+            //Verifica se codigo é valido
             if(codigo >= 11 && codigo <= 17){
+                // Chama função de processar a venda e soma o valor retornado no total da categoria
                 valorlimpeza += processarvenda(&estoque[codigo], preco[codigo]);
             }   
             else{
@@ -126,12 +131,15 @@ int main(){
             }
             break;
         case 4:
+            //Verifica se tem produto no carrinho
             if(valorlimpeza + valoralimento + valorpadaria == 0){
                 printf("Carrinho vazio!");
                 break;
             }
             else{
+                //Soma total da compra
                 valorcompra = valorlimpeza + valoralimento + valorpadaria;
+                // Mostra valores por categoria e o total de todas as categorias
                 printf("Valor por categoria:\n");
                 printf("Limpeza: R$%.2f\n", valorlimpeza);
                 printf("Alimento: R$%.2f\n", valoralimento);
@@ -139,10 +147,14 @@ int main(){
                  printf("Valor total: R$%.2f\n", valorcompra);
             }
 
+            // Chama função de pagamento
             valorpago = pagamento(valorcompra);
+            // Se pagamento foi válido
             if(valorpago > 0){
+                //Soma no faturamento
                 faturamento += valorpago;
 
+                //Zero o carrinho
                 valorlimpeza = 0;
                 valoralimento = 0;
                 valorpadaria = 0;
@@ -150,17 +162,21 @@ int main(){
             }
             break;
         case 5:
+            //Abre o caixa
             printf("Digite valor em caixa para troco:\n");
             scanf("%f", &valor_caixaberto);    
-        
+
+            // Atualiza estoque da padaria
             printf("Atualize o estoque da padaria:\n");
             for(int i = 31;i <= 37; i++){
                 printf("Produto %d quantidade: ", i);
                 scanf("%d", &estoque[i]);
             }
+            //Marca que o caixa como aberto
             caixa_aberto = 1;
             break;
         case 6:
+            // Mostra fechamento do caixa
             printf("=== Fechamento do caixa ===\n");
             printf("Valor inicial: R$%.2f\n", valor_caixaberto);
             printf("Faturamento: R$%.2f\n", faturamento);
@@ -168,6 +184,7 @@ int main(){
             printf("===========================");
             break;
         case 7: 
+            //Encerra o programa
             printf("Saindo...\n");
             break;
         
@@ -176,7 +193,7 @@ int main(){
             break;
         }
 
-    } while (opmenu != 7);
+    } while (opmenu != 7); //programa continua até escolher sair
     
 
 
@@ -189,6 +206,7 @@ float processarvenda(int *estoqueitem, float precoitem){
     int quantidade;
     float totalitem;
 
+    //Verifica se tem estoque
     if(*estoqueitem == 0){
         printf("Sem estoque!");
         return 0;
@@ -197,15 +215,16 @@ float processarvenda(int *estoqueitem, float precoitem){
     printf("Digite a quantidade que deseja: \n");
     scanf("%d", &quantidade);
 
+    // Verifica se há quantidade suficiente
     if(quantidade > *estoqueitem){
         printf("Estoque insuficiente\n");
         return 0;
     }
 
-    *estoqueitem -= quantidade;
+    *estoqueitem -= quantidade; // Atualiza estoque
 
-    totalitem = quantidade * precoitem;
-    return totalitem;
+    totalitem = quantidade * precoitem; // Calcula total
+    return totalitem; // Retorna valor da compra
 }
 
 //Função pagamento 
@@ -213,11 +232,13 @@ float pagamento(float total){
     int oppagamento, statusmaquina;
     float desconto = 0, valordesconto, recebido;
 
+    // Escolha forma de pagamento
     printf("Forma de pagamento:\n");
     printf("1 - Dinheiro\n");
     printf("2 - Cartão\n");
     scanf("%d", &oppagamento);
 
+    //Aplica desconto de acordo com o valor da compra
     if(oppagamento == 1){
         if(total <= 50){
             desconto = 0.05;
@@ -230,26 +251,28 @@ float pagamento(float total){
             scanf("%f", &desconto);
             desconto = desconto / 100;
         }
-        valordesconto = total - (total * desconto);
+        valordesconto = total - (total * desconto); // Calcula valor com desconto
         printf("Valor com o desconto R$%.2f\n", valordesconto);
         printf("Digite valor recebido: ");
         scanf("%f", &recebido);
+        // Verifica se valor é suficiente
         if(recebido < valordesconto){
             printf("Valor insuficinente!\n");
             return 0;
         }
         printf("Troco: R$%.2f", recebido - valordesconto);
-        return valordesconto;
+        return valordesconto; // Retorna valor pago para somar na variavel faturamento
     }
     else{
+        //Pagamento no cartão
         printf("Digite status da maquina:\n");
         printf("1 - Sim\n0 - Não\n");
         scanf("%d", &statusmaquina);
         if(statusmaquina == 1){
-            return total;
+            return total; // Retorna valor sem desconto para somar na variavel faturamento
         }
         else{
-            return 0;
+            return 0; // Pagamento não realizado (erro no pagamento)
         }
     }
 

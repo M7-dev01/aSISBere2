@@ -163,7 +163,7 @@ int main(){
             break;
         case 5:
             //Abre o caixa
-            printf("Digite valor em caixa para troco:\n");
+            printf("Digite valor em caixa:\n");
             scanf("%f", &valor_caixaberto);    
 
             // Atualiza estoque da padaria
